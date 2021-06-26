@@ -8,7 +8,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
 }: PropsWithChildren<GameSceneProps>) => (
   <>
     <Terrain />
-    <pointLight color="white" intensity={1} position={[5, 3, -5]} />
+    <pointLight color="white" intensity={2} position={[10, 10, 5]} />
     <ambientLight color="yellow" intensity={0.2} />
     {children}
   </>

@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { MapControls, PerspectiveCamera } from '@react-three/drei';
 import { GameScene } from '../components/GameScene';
-import { Level } from '../components/Level';
+import { Level } from './Level';
 
 export const Game: React.FC = () => (
   <Canvas

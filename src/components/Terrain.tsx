@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import { Mesh } from 'three';
+import { Mesh, RepeatWrapping } from 'three';
 import { useTexture } from '@react-three/drei';
 import mapUrl from '../textures/gravel/gravel_ground_01_diff_1k.jpg';
 import displacementUrl from '../textures/gravel/gravel_ground_01_disp_1k.jpg';
@@ -23,6 +23,17 @@ export function Terrain() {
     roughUrl,
     aoUrl,
   ]);
+
+  useEffect(() => {
+    [map, displacement, normal, rough, ao].forEach((texture) => {
+      /* eslint-disable no-param-reassign */
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+      texture.repeat.set(2, 2);
+      texture.anisotropy = 4;
+      /* eslint-enable no-param-reassign */
+    });
+  });
 
   return (
     <mesh
