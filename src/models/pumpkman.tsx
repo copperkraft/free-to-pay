@@ -28,7 +28,7 @@ type GLTFResult = GLTF & {
 
 export const Pumpkman = () => {
   const group = useRef<THREE.Group>();
-  const { nodes, materials } = useGLTF('/models/pumpkman.glb') as GLTFResult;
+  const { nodes, materials } = useGLTF('/free-to-pay/models/pumpkman.glb') as GLTFResult;
   return (
     <group ref={group} dispose={null} rotation={[0, -Math.PI / 2, 0]} position={[0, -0.5, 0]}>
       <group position={[-0.2, 2.41, 0]} scale={[0.21, 0.21, 0.21]}>
@@ -53,4 +53,4 @@ export const Pumpkman = () => {
   );
 };
 
-useGLTF.preload('/models/pumpkman.glb');
+useGLTF.preload('/free-to-pay/models/pumpkman.glb');
