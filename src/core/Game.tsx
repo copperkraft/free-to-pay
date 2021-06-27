@@ -10,7 +10,8 @@ export const Game: React.FC = () => (
       gl.setClearColor('#000000');
     }}
   >
-    <PerspectiveCamera makeDefault position={[0, 10, 5]} />
+    <axesHelper />
+    <PerspectiveCamera makeDefault position={[0, 20, 15]} />
     <MapControls enabled />
     <Suspense fallback={null}>
       <GameScene>

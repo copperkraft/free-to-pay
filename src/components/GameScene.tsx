@@ -3,11 +3,13 @@ import { Terrain } from './Terrain';
 
 interface GameSceneProps {}
 
+const levelSize: [number, number] = [20, 20];
+
 export const GameScene: React.FC<GameSceneProps> = ({
   children,
 }: PropsWithChildren<GameSceneProps>) => (
   <>
-    <Terrain />
+    <Terrain size={levelSize} />
     <pointLight color="white" intensity={2} position={[10, 10, 5]} />
     <ambientLight color="yellow" intensity={0.2} />
     {children}
