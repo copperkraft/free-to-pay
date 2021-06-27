@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
 import { Mesh, Vector3 } from 'three';
-import { Box, Cylinder, Sphere } from '@react-three/drei';
+import { Cylinder } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useControls } from 'leva';
 import { useKeyPress } from '../utils/useKeyPress';
+import { Pumpkman } from '../models/Pumpkman';
 
 const pigSize: [number, number, number] = [0.5, 0.4, 1.2];
 const pigLegSize: [number, number, number] = [0.2, 0.1, 0.6];
@@ -57,12 +58,7 @@ export function Character() {
       </Cylinder>
 
       <group>
-        <Box args={[0.75, 1, 0.5]} position={[0, 0.5, 0]}>
-          <meshStandardMaterial attach="material" color="green" />
-        </Box>
-        <Sphere args={[0.2]} position={[0, 1.25, 0]}>
-          <meshStandardMaterial attach="material" color="pink" />
-        </Sphere>
+        <Pumpkman />
       </group>
     </group>
   );
