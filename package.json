@@ -1,6 +1,7 @@
 {
   "name": "free-to-pay",
   "version": "0.1.0",
+  "homepage": "https://copperkraft.github.io/free-to-pay",
   "dependencies": {
     "@react-three/drei": "^6.1.2",
     "@react-three/fiber": "^7.0.1",
@@ -16,7 +17,6 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react-hooks": "^4.0.8",
-    "gh-pages": "^3.2.2",
     "leva": "^0.9.12",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -57,6 +57,7 @@
     "@typescript-eslint/parser": "^4.27.0",
     "eslint": "^7.29.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-plugin-react": "^7.20.3"
+    "eslint-plugin-react": "^7.20.3",
+    "gh-pages": "^3.2.3"
   }
 }
