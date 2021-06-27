@@ -8,11 +8,11 @@ import normalUrl from '../textures/gravel/gravel_ground_01_nor_1k.jpg';
 import roughUrl from '../textures/gravel/gravel_ground_01_rough_1k.jpg';
 import aoUrl from '../textures/gravel/gravel_ground_01_ao_1k.jpg';
 
-interface TerrainProps {
+interface LevelProps {
   size: [number, number];
 }
 
-export const Terrain: React.FC<TerrainProps> = ({ size }: TerrainProps) => {
+export const Level: React.FC<LevelProps> = ({ size }: LevelProps) => {
   const terrain = useRef<Mesh>(null!);
   const [
     map,
