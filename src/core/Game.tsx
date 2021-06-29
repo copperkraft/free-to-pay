@@ -10,8 +10,8 @@ export const Game: React.FC = () => (
     }}
   >
     <axesHelper />
-    <PerspectiveCamera makeDefault position={[0, 20, 15]} />
-    <MapControls enabled={false} />
+    <PerspectiveCamera makeDefault position={[0, 40, 25]} zoom={1.5} />
+    <MapControls enabled />
     <Suspense fallback={null}>
       <GameScene />
     </Suspense>
