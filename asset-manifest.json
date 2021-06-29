@@ -1,27 +1,22 @@
 {
   "files": {
     "main.css": "/free-to-pay/static/css/main.6dea0f05.chunk.css",
-    "main.js": "/free-to-pay/static/js/main.ddc3d163.chunk.js",
-    "main.js.map": "/free-to-pay/static/js/main.ddc3d163.chunk.js.map",
-    "runtime-main.js": "/free-to-pay/static/js/runtime-main.1464ab94.js",
-    "runtime-main.js.map": "/free-to-pay/static/js/runtime-main.1464ab94.js.map",
-    "static/js/2.7ce0faa8.chunk.js": "/free-to-pay/static/js/2.7ce0faa8.chunk.js",
-    "static/js/2.7ce0faa8.chunk.js.map": "/free-to-pay/static/js/2.7ce0faa8.chunk.js.map",
-    "static/js/3.868d2046.chunk.js": "/free-to-pay/static/js/3.868d2046.chunk.js",
-    "static/js/3.868d2046.chunk.js.map": "/free-to-pay/static/js/3.868d2046.chunk.js.map",
+    "main.js": "/free-to-pay/static/js/main.5331984b.chunk.js",
+    "main.js.map": "/free-to-pay/static/js/main.5331984b.chunk.js.map",
+    "runtime-main.js": "/free-to-pay/static/js/runtime-main.9f78cc15.js",
+    "runtime-main.js.map": "/free-to-pay/static/js/runtime-main.9f78cc15.js.map",
+    "static/js/2.9e7b6c0e.chunk.js": "/free-to-pay/static/js/2.9e7b6c0e.chunk.js",
+    "static/js/2.9e7b6c0e.chunk.js.map": "/free-to-pay/static/js/2.9e7b6c0e.chunk.js.map",
+    "static/js/3.58c2b34c.chunk.js": "/free-to-pay/static/js/3.58c2b34c.chunk.js",
+    "static/js/3.58c2b34c.chunk.js.map": "/free-to-pay/static/js/3.58c2b34c.chunk.js.map",
     "index.html": "/free-to-pay/index.html",
     "static/css/main.6dea0f05.chunk.css.map": "/free-to-pay/static/css/main.6dea0f05.chunk.css.map",
-    "static/js/2.7ce0faa8.chunk.js.LICENSE.txt": "/free-to-pay/static/js/2.7ce0faa8.chunk.js.LICENSE.txt",
-    "static/media/gravel_ground_01_ao_1k.0864f47a.jpg": "/free-to-pay/static/media/gravel_ground_01_ao_1k.0864f47a.jpg",
-    "static/media/gravel_ground_01_diff_1k.388a9c56.jpg": "/free-to-pay/static/media/gravel_ground_01_diff_1k.388a9c56.jpg",
-    "static/media/gravel_ground_01_disp_1k.f7972ada.jpg": "/free-to-pay/static/media/gravel_ground_01_disp_1k.f7972ada.jpg",
-    "static/media/gravel_ground_01_nor_1k.90f13fb6.jpg": "/free-to-pay/static/media/gravel_ground_01_nor_1k.90f13fb6.jpg",
-    "static/media/gravel_ground_01_rough_1k.75a0f41e.jpg": "/free-to-pay/static/media/gravel_ground_01_rough_1k.75a0f41e.jpg"
+    "static/js/2.9e7b6c0e.chunk.js.LICENSE.txt": "/free-to-pay/static/js/2.9e7b6c0e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.1464ab94.js",
-    "static/js/2.7ce0faa8.chunk.js",
+    "static/js/runtime-main.9f78cc15.js",
+    "static/js/2.9e7b6c0e.chunk.js",
     "static/css/main.6dea0f05.chunk.css",
-    "static/js/main.ddc3d163.chunk.js"
+    "static/js/main.5331984b.chunk.js"
   ]
 }
