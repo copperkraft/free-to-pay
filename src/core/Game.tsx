@@ -11,7 +11,7 @@ export const Game: React.FC = () => (
   >
     <axesHelper />
     <PerspectiveCamera makeDefault position={[0, 20, 15]} />
-    <MapControls enabled />
+    <MapControls enabled={false} />
     <Suspense fallback={null}>
       <GameScene />
     </Suspense>

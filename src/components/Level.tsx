@@ -2,8 +2,9 @@ import React, {
   useEffect, useMemo, useRef, useState,
 } from 'react';
 
-import { Mesh, MirroredRepeatWrapping } from 'three';
+import { Mesh, MirroredRepeatWrapping, Vector3 } from 'three';
 import { Plane, useTexture, Text } from '@react-three/drei';
+import { ThreeEvent } from '@react-three/fiber';
 import mapUrl from '../textures/gravel/gravel_ground_01_diff_1k.jpg';
 import displacementUrl from '../textures/gravel/gravel_ground_01_disp_1k.jpg';
 import normalUrl from '../textures/gravel/gravel_ground_01_nor_1k.jpg';
@@ -12,10 +13,14 @@ import aoUrl from '../textures/gravel/gravel_ground_01_ao_1k.jpg';
 import { mapImageToLevel } from '../utils/levelConverter';
 
 interface LevelProps {
-  size: [number, number];
+  onTerrainPointerDown: (position: Vector3) => void
+  onTerrainPointerMove: (position: Vector3) => void;
 }
 
-export const Level: React.FC<LevelProps> = () => {
+export const Level: React.FC<LevelProps> = ({
+  onTerrainPointerDown,
+  onTerrainPointerMove,
+}: LevelProps) => {
   const [level, setLevel] = useState<string[][]>([]);
 
   useEffect(() => {
@@ -62,6 +67,14 @@ export const Level: React.FC<LevelProps> = () => {
         rotation={[-Math.PI / 2, 0, 0]}
         ref={terrain}
         args={size}
+        onPointerDown={(event: ThreeEvent<PointerEvent>) => {
+          if (event.button === 0) {
+            onTerrainPointerDown(new Vector3(...event.point.toArray()));
+          }
+        }}
+        onPointerMove={(event: ThreeEvent<PointerEvent>) => {
+          onTerrainPointerMove(new Vector3(...event.point.toArray()));
+        }}
       >
         <meshStandardMaterial
           map={map}
