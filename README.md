@@ -6,11 +6,11 @@ Game for
 
 ## Demo
 
-It is not deployed yet
+Demo is available on [github pages](https://copperkraft.github.io/free-to-pay/)
 
 ### How to play?
 
-It is not playable yet
+It is not playable yet, but you can aim and move character with WASD or arrow keys
 
 ## Available Scripts
 
