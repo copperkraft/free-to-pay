@@ -1,58 +1,50 @@
-import { useFrame } from '@react-three/fiber';
-import { useControls } from 'leva';
-import React, { PropsWithChildren, useCallback, useState } from 'react';
-import { Vector3 } from 'three';
-import { useMouse } from '../utils/useMouse';
+import React, { PropsWithChildren, useRef } from 'react';
+import { Group, Vector3 } from 'three';
+import { ThreeEvent, useFrame } from '@react-three/fiber';
+import { PerspectiveCamera } from '@react-three/drei';
 import { Character } from './Character';
 import { Level } from './Level';
+import { EventPlane } from './EventPlane';
+import { Pointer } from '../models/Pointer';
 
 interface GameSceneProps { }
 
 export const GameScene: React.FC<GameSceneProps> = ({
   children,
 }: PropsWithChildren<GameSceneProps>) => {
-  const mouseUp = useMouse(['Left']);
-  const [moving, setMoving] = useState(false);
+  const character = useRef<Group>(null!);
+  const pointer = useRef<Group>(null!);
+  const interestPoint = useRef(new Vector3(0, 0, 0));
 
-  const {
-    followMouse,
-  } = useControls(
-    {
-      followMouse: false,
-    },
-  );
+  const onPointerMove = (event: ThreeEvent<PointerEvent>) => {
+    pointer.current.position.set(...event.point.toArray());
+  };
 
-  // Тут что-то не так с коллбэками. followMouse и moving не сбрасывают мемоизацию коллбэка.
-  // Что-то я не понимаю до конца в реакте тут, замыкания не замыкаются.
-  // А если followMouse true по умолчанию сделать, то только один раз работает.
+  useFrame(({ camera }) => {
+    interestPoint.current.lerp(
+      pointer.current.position.clone().lerp(character.current.position, 2 / 3),
+      0.01,
+    );
 
-  const [moveTarget, setMoveTarget] = useState<Vector3 | null>(null);
+    camera.position.set(...new Vector3(0, 60, 35).add(interestPoint.current).toArray());
 
-  const onTerrainPointerDown = useCallback((target: Vector3) => {
-    if (followMouse) {
-      setMoving(true);
-    }
-    setMoveTarget(target);
-  }, [followMouse, moving]);
-
-  const onTerrainPointerMove = useCallback((target: Vector3) => {
-    if (followMouse && moving) {
-      setMoveTarget(target);
-    }
-  }, [followMouse, moving]);
-
-  useFrame(() => {
-    if (mouseUp && moving) {
-      setMoving(false);
-    }
+    camera.lookAt(interestPoint.current);
   });
 
   return (
     <>
       <Level />
       <pointLight color="white" intensity={2} position={[10, 20, 5]} />
+      <PerspectiveCamera makeDefault position={[0, 40, 25]} zoom={1.5} />
       <ambientLight color="yellow" intensity={0.2} />
-      <Character moveTarget={moveTarget} />
+      <group>
+        <EventPlane
+          size={[300, 300]}
+          onPointerMove={onPointerMove}
+        />
+      </group>
+      <Pointer pointer={pointer} />
+      <Character character={character} />
       {children}
     </>
   );
