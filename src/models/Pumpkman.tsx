@@ -33,26 +33,28 @@ type GLTFResult = GLTF & {
 
 export const Pumpkman = ({ top }: PumpkmanProps) => {
   const { nodes, materials } = useGLTF('/free-to-pay/models/pumpkman.glb') as GLTFResult;
-  return (
-    <group ref={top} dispose={null} rotation={[0, -Math.PI / 2, 0]} position={[0, -0.5, 0]}>
-      <group position={[-0.2, 2.41, 0]} scale={[0.21, 0.21, 0.21]}>
-        <mesh geometry={nodes.Cube.geometry} material={materials.head} />
-        <mesh geometry={nodes.Cube_1.geometry} material={materials.tail} />
-        <mesh geometry={nodes.Cube_2.geometry} material={materials.eyes} />
-        <mesh geometry={nodes.Cube_3.geometry} material={materials.body} />
+  return ( // rotation is applied due to incorrect character model
+    <group rotation={[0, -Math.PI / 2, 0]}>
+      <group ref={top} dispose={null} position={[0, -0.5, 0]}>
+        <group position={[-0.2, 2.41, 0]} scale={[0.21, 0.21, 0.21]}>
+          <mesh geometry={nodes.Cube.geometry} material={materials.head} />
+          <mesh geometry={nodes.Cube_1.geometry} material={materials.tail} />
+          <mesh geometry={nodes.Cube_2.geometry} material={materials.eyes} />
+          <mesh geometry={nodes.Cube_3.geometry} material={materials.body} />
+        </group>
+        <mesh
+          geometry={nodes.vest.geometry}
+          material={nodes.vest.material}
+          position={[-0.2, 2.41, 0]}
+          scale={[0.21, 0.21, 0.21]}
+        />
+        <mesh
+          geometry={nodes.pants.geometry}
+          material={nodes.pants.material}
+          position={[-0.2, 2.41, 0]}
+          scale={[0.21, 0.21, 0.21]}
+        />
       </group>
-      <mesh
-        geometry={nodes.vest.geometry}
-        material={nodes.vest.material}
-        position={[-0.2, 2.41, 0]}
-        scale={[0.21, 0.21, 0.21]}
-      />
-      <mesh
-        geometry={nodes.pants.geometry}
-        material={nodes.pants.material}
-        position={[-0.2, 2.41, 0]}
-        scale={[0.21, 0.21, 0.21]}
-      />
     </group>
   );
 };

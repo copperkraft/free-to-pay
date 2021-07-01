@@ -6,9 +6,11 @@ import { useKeyPress } from '../utils/useKeyPress';
 import { Pumpkman } from '../models/Pumpkman';
 import { Pig } from '../models/Pig';
 
+const yAxis = new Vector3(0, 1, 0);
+
 interface CharacterProps {
   character: MutableRefObject<Group>,
-  pointerPosition: MutableRefObject<Vector3>
+  pointer: MutableRefObject<Group>
 }
 
 enum CharacterState {
@@ -20,116 +22,83 @@ enum CharacterState {
 
 export const Character: React.FC<CharacterProps> = ({
   character,
-  pointerPosition,
+  pointer,
 }: CharacterProps) => {
-  const characterTop = useRef<Group>(null!);
+  const rider = useRef<Group>(null!);
+  const velocity = useRef(new Vector3(0, 0, 0));
+  const mountDirection = useRef(new Vector3(1, 0, 0));
+  const riderDirection = useRef(new Vector3(1, 0, 0));
 
   const up = useKeyPress(['ArrowUp', 'KeyW']);
   const down = useKeyPress(['ArrowDown', 'KeyS']);
   const left = useKeyPress(['ArrowLeft', 'KeyA']);
   const right = useKeyPress(['ArrowRight', 'KeyD']);
 
-  const yAxis = new Vector3(0, 1, 0);
   const characterState = useRef(CharacterState.IDLE);
-  const velocity = useRef(0);
-  const direction = useRef(new Vector3(0, 0, 0));
-  const forwardVector = useRef(new Vector3(0, 0, 0));
-  const pointerPositionLocal = useRef(new Vector3(0, 0, 0));
-  const turning = useRef(false);
+
   const {
-    maxSpeed,
+    speed,
     turningSpeed,
-    acceleration,
-    slowdown,
+    inertia,
   } = useControls({
-    maxSpeed: 10,
-    turningSpeed: 10,
-    acceleration: 20,
-    slowdown: 20,
+    speed: 20,
+    turningSpeed: 20,
+    inertia: 1,
   });
 
   useFrame((state, delta) => {
-    if (up || left || right || down) {
-      if (characterState.current === CharacterState.IDLE
-        || characterState.current === CharacterState.SLOWDOWN) {
-        characterState.current = CharacterState.ACCELERATION;
-        turning.current = true;
-      }
+    const acceleration = new Vector3(
+      -left + (+right),
+      0,
+      -up + (+down),
+    );
 
-      direction.current.copy(new Vector3(
-        (-left + (+right)),
-        0,
-        (-up + (+down)),
-      ).normalize());
-    } else if (characterState.current === CharacterState.RUN
-      || characterState.current === CharacterState.ACCELERATION) {
-      turning.current = false;
+    if (acceleration.length() === 0) {
       characterState.current = CharacterState.SLOWDOWN;
     }
 
-    switch (characterState.current) {
-      case CharacterState.ACCELERATION:
-        velocity.current += acceleration * delta;
-        if (velocity.current >= maxSpeed) {
-          velocity.current = maxSpeed;
-          characterState.current = CharacterState.RUN;
-        }
-        break;
-      case CharacterState.RUN:
-        break;
-      case CharacterState.SLOWDOWN:
-        velocity.current -= slowdown * delta;
-        if (velocity.current <= 0) {
-          velocity.current = 0;
-          direction.current.copy(new Vector3(0, 0, 0));
-          characterState.current = CharacterState.IDLE;
-        }
+    velocity.current.lerp(acceleration.normalize(), 1 / inertia / speed);
 
-        break;
-      case CharacterState.IDLE:
-      default:
-        break;
+    if (velocity.current.length() > 1) {
+      velocity.current.normalize();
     }
 
-    character.current.getWorldDirection(forwardVector.current);
+    characterState.current = velocity.current.length() < 0.1
+      ? CharacterState.IDLE
+      : characterState.current = velocity.current.length() > 0.9
+        ? CharacterState.RUN
+        : characterState.current = acceleration.length() === 0
+          ? CharacterState.SLOWDOWN
+          : CharacterState.ACCELERATION;
 
-    if (turning.current) {
-      const crossed = forwardVector.current.clone().cross(direction.current);
-      let angle = forwardVector.current.angleTo(direction.current);
-      if (crossed.y < 0) angle = -angle;
-      const angleDiff = delta * turningSpeed;
-      if (Math.abs(angle) < angleDiff) {
-        character.current.rotateOnAxis(yAxis, angle);
-      } else if (angle > 0) {
-        angle -= angleDiff;
-        character.current.rotateOnAxis(yAxis, angleDiff);
-      } else {
-        angle += angleDiff;
-        character.current.rotateOnAxis(yAxis, -angleDiff);
-      }
+    mountDirection.current
+      .lerp(velocity.current, turningSpeed * delta)
+      .normalize();
 
-      character.current.position.addScaledVector(direction.current, delta * velocity.current);
-    }
+    riderDirection.current
+      .subVectors(pointer.current.position, character.current.position)
+      .normalize();
 
-    if (pointerPosition.current) {
-      character.current.getWorldDirection(forwardVector.current);
-      pointerPositionLocal.current.subVectors(character.current.position, pointerPosition.current);
-      // Тут легкое безумие с углами)
-      let topRotationAngle = pointerPositionLocal.current.angleTo(forwardVector.current)
-        - Math.PI / 2;
-      const crossed = pointerPositionLocal.current.cross(forwardVector.current);
-      if (crossed.y > 0) topRotationAngle = -topRotationAngle - Math.PI;
-      characterTop.current.setRotationFromAxisAngle(
-        yAxis,
-        topRotationAngle - Math.PI,
-      );
-    }
+    const characterRotationAngle = Math.atan2(mountDirection.current.x, mountDirection.current.z);
+    const riderRotationAngle = Math.atan2(riderDirection.current.x, riderDirection.current.z);
+
+    character.current.setRotationFromAxisAngle(
+      yAxis,
+      characterRotationAngle,
+    );
+
+    rider.current.setRotationFromAxisAngle(
+      yAxis,
+      riderRotationAngle - characterRotationAngle,
+    );
+
+    character.current.position.addScaledVector(velocity.current, delta * speed);
   });
 
   return (
     <group ref={character} position={[0, 0.75, 0]}>
       <Pig />
-      <Pumpkman top={characterTop} />
+      <Pumpkman top={rider} />
     </group>
   );
 };

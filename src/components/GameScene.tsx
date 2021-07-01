@@ -2,6 +2,7 @@ import React, { PropsWithChildren, useRef } from 'react';
 import { Group, Vector3 } from 'three';
 import { ThreeEvent, useFrame } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
+import { useControls } from 'leva';
 import { Character } from './Character';
 import { Level } from './Level';
 import { EventPlane } from './EventPlane';
@@ -14,21 +15,25 @@ export const GameScene: React.FC<GameSceneProps> = ({
 }: PropsWithChildren<GameSceneProps>) => {
   const character = useRef<Group>(null!);
   const pointer = useRef<Group>(null!);
-  const pointerPosition = useRef<Vector3>(null!);
   const interestPoint = useRef(new Vector3(0, 0, 0));
 
+  const {
+    cameraSpeed,
+    cameraPosition,
+  } = useControls({
+    cameraSpeed: 0.01,
+    cameraPosition: 0.6,
+  });
+
   const onPointerMove = (event: ThreeEvent<PointerEvent>) => {
-    pointerPosition.current = event.point;
-    pointer.current.position.set(...event.point.toArray());
+    pointer.current.position.copy(event.point);
   };
 
   useFrame(({ camera }) => {
-    if (pointerPosition.current) {
-      interestPoint.current.lerp(
-        pointerPosition.current.clone().lerp(character.current.position, 2 / 3),
-        0.01,
-      );
-    }
+    interestPoint.current.lerp(
+      pointer.current.position.clone().lerp(character.current.position, cameraPosition),
+      cameraSpeed,
+    );
 
     camera.position.set(...new Vector3(0, 60, 35).add(interestPoint.current).toArray());
 
@@ -48,7 +53,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
         />
       </group>
       <Pointer pointer={pointer} />
-      <Character character={character} pointerPosition={pointerPosition} />
+      <Character character={character} pointer={pointer} />
       {children}
     </>
   );
