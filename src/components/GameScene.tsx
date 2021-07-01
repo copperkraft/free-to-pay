@@ -14,17 +14,21 @@ export const GameScene: React.FC<GameSceneProps> = ({
 }: PropsWithChildren<GameSceneProps>) => {
   const character = useRef<Group>(null!);
   const pointer = useRef<Group>(null!);
+  const pointerPosition = useRef<Vector3>(null!);
   const interestPoint = useRef(new Vector3(0, 0, 0));
 
   const onPointerMove = (event: ThreeEvent<PointerEvent>) => {
+    pointerPosition.current = event.point;
     pointer.current.position.set(...event.point.toArray());
   };
 
   useFrame(({ camera }) => {
-    interestPoint.current.lerp(
-      pointer.current.position.clone().lerp(character.current.position, 2 / 3),
-      0.01,
-    );
+    if (pointerPosition.current) {
+      interestPoint.current.lerp(
+        pointerPosition.current.clone().lerp(character.current.position, 2 / 3),
+        0.01,
+      );
+    }
 
     camera.position.set(...new Vector3(0, 60, 35).add(interestPoint.current).toArray());
 
@@ -44,7 +48,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
         />
       </group>
       <Pointer pointer={pointer} />
-      <Character character={character} />
+      <Character character={character} pointerPosition={pointerPosition} />
       {children}
     </>
   );
