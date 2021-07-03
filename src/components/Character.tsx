@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { useControls } from 'leva';
 import { useKeyPress } from '../utils/useKeyPress';
 import { Pumpkman } from '../models/Pumpkman';
+import { WeaponType } from './Weapon';
 import { Piggy } from '../models/Piggy';
 import { CharacterState } from '../utils/characterState.enum';
 
@@ -24,7 +25,7 @@ const getCharacterState = (speed: number, acceleration: number) => {
 
 interface CharacterProps {
   character: MutableRefObject<Group>,
-  pointer: MutableRefObject<Group>
+  pointer: MutableRefObject<Group>,
 }
 
 export const Character: React.FC<CharacterProps> = ({
@@ -40,7 +41,10 @@ export const Character: React.FC<CharacterProps> = ({
   const down = useKeyPress(['ArrowDown', 'KeyS']);
   const left = useKeyPress(['ArrowLeft', 'KeyA']);
   const right = useKeyPress(['ArrowRight', 'KeyD']);
+  const weapon1key = useKeyPress(['Digit1']);
+  const weapon2key = useKeyPress(['Digit2']);
 
+  const weapon = useRef(WeaponType.RIFLE);
   const [characterState, setCharacterState] = useState(CharacterState.IDLE);
 
   const {
@@ -90,12 +94,17 @@ export const Character: React.FC<CharacterProps> = ({
     );
 
     character.current.position.addScaledVector(velocity.current, delta * speed);
+
+    // Weapons
+
+    if (weapon1key) weapon.current = WeaponType.RIFLE;
+    if (weapon2key) weapon.current = WeaponType.KNIFE;
   });
 
   return (
     <group ref={character} position={[0, 0.75, 0]}>
       <Piggy characterState={characterState} />
-      <Pumpkman top={rider} />
+      <Pumpkman top={rider} weapon={weapon.current} />
     </group>
   );
 };
