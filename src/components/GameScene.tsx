@@ -35,7 +35,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
       cameraSpeed,
     );
 
-    camera.position.set(...new Vector3(0, 60, 35).add(interestPoint.current).toArray());
+    camera.position.set(...new Vector3(0, 35, 15).add(interestPoint.current).toArray());
 
     camera.lookAt(interestPoint.current);
   });

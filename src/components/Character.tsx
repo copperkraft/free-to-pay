@@ -1,24 +1,31 @@
-import React, { MutableRefObject, useRef } from 'react';
+import React, { MutableRefObject, useRef, useState } from 'react';
 import { Group, Vector3 } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useControls } from 'leva';
 import { useKeyPress } from '../utils/useKeyPress';
 import { Pumpkman } from '../models/Pumpkman';
-import { Pig } from '../models/Pig';
 import { WeaponType } from './Weapon';
+import { Piggy } from '../models/Piggy';
+import { CharacterState } from '../utils/characterState.enum';
 
 const yAxis = new Vector3(0, 1, 0);
+
+const getCharacterState = (speed: number, acceleration: number) => {
+  if (speed < 0.1) {
+    return CharacterState.IDLE;
+  }
+  if (speed > 0.9) {
+    return CharacterState.RUN;
+  }
+  if (acceleration === 0) {
+    return CharacterState.SLOWDOWN;
+  }
+  return CharacterState.ACCELERATION;
+};
 
 interface CharacterProps {
   character: MutableRefObject<Group>,
   pointer: MutableRefObject<Group>,
-}
-
-enum CharacterState {
-  IDLE,
-  ACCELERATION,
-  RUN,
-  SLOWDOWN,
 }
 
 export const Character: React.FC<CharacterProps> = ({
@@ -37,8 +44,8 @@ export const Character: React.FC<CharacterProps> = ({
   const weapon1key = useKeyPress(['Digit1']);
   const weapon2key = useKeyPress(['Digit2']);
 
-  const characterState = useRef(CharacterState.IDLE);
   const weapon = useRef(WeaponType.RIFLE);
+  const [characterState, setCharacterState] = useState(CharacterState.IDLE);
 
   const {
     speed,
@@ -57,23 +64,13 @@ export const Character: React.FC<CharacterProps> = ({
       -up + (+down),
     );
 
-    if (acceleration.length() === 0) {
-      characterState.current = CharacterState.SLOWDOWN;
-    }
-
     velocity.current.lerp(acceleration.normalize(), 1 / inertia / speed);
 
     if (velocity.current.length() > 1) {
       velocity.current.normalize();
     }
 
-    characterState.current = velocity.current.length() < 0.1
-      ? CharacterState.IDLE
-      : characterState.current = velocity.current.length() > 0.9
-        ? CharacterState.RUN
-        : characterState.current = acceleration.length() === 0
-          ? CharacterState.SLOWDOWN
-          : CharacterState.ACCELERATION;
+    setCharacterState(getCharacterState(velocity.current.length(), acceleration.length()));
 
     mountDirection.current
       .lerp(velocity.current, turningSpeed * delta)
@@ -106,7 +103,7 @@ export const Character: React.FC<CharacterProps> = ({
 
   return (
     <group ref={character} position={[0, 0.75, 0]}>
-      <Pig />
+      <Piggy characterState={characterState} />
       <Pumpkman top={rider} weapon={weapon.current} />
     </group>
   );
